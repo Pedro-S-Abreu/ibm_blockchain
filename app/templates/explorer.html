@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Block Explorer</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <h1>Block Explorer</h1>
+
+        <table class="table table-striped">
+            <thead>
+                <th scope="col">Height</th>
+                <th scope="col">Iime</th>
+            </thead>
+            <tbody>
+            {% for block in chain  %}
+                <tr>
+
+
+                    <td><a href="{{ url_for('block', index=block['index']) }}" class="btn btn-info" role="button">{{'%08d' % block['index']}}</a></td>
+                    <td>{{ readable_time(block['timestamp']) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </body>
+</html>

@@ -152,9 +152,13 @@ def get_chain():
     chain_data = []
     for block in blockchain.chain:
         chain_data.append(block.__dict__)
-    return json.dumps({"length": len(chain_data),
+    return json.dumps({"height": len(chain_data),
                        "chain": chain_data})
 
+@app.route('/block/<int:index>')
+def block(index):
+    consensus()
+    return json.dumps(blockchain.chain[index].__dict__)
 
 # endpoint to request the node to mine the unconfirmed
 # transactions (if any). We'll be using it to initiate
@@ -213,14 +217,14 @@ def consensus():
     global blockchain
 
     longest_chain = None
-    current_len = len(blockchain)
+    current_len = len(blockchain.chain)
 
     for node in peers:
         response = requests.get('http://{}/chain'.format(node))
-        length = response.json()['length']
+        height = response.json()['height']
         chain = response.json()['chain']
-        if length > current_len and blockchain.check_chain_validity(chain):
-            current_len = length
+        if height > current_len and blockchain.check_chain_validity(chain):
+            current_len = height
             longest_chain = chain
 
     if longest_chain:

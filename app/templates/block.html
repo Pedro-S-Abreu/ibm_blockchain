@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <td><a href="{{ url_for('explorer') }}" class="btn btn-info" role="button">Back to Block Explorer</a></td>
+    <head>
+        <title>Block Explorer</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <h1>Block #{{block['index']}}</h1>
+
+
+
+        <section class="container">
+            <div>
+                <p><b>Timestamp:</b> {{ readable_time( block['timestamp']) }}</p>
+
+                <p><b>Nonce:</b> {{ '%03d'%block['nonce'] }}</p>
+                <p><b>Hash:</b> {{ block['hash'] }}</p>
+                <p><b>Previous Hash:</b> {{ block['previous_hash'] }}</p>
+            </div>
+            <div>
+            <p><b>Transactions:</b> </p>
+
+                {% for transaction in block['transactions'] %}
+                <p><b>{{transaction['author']}}</b> {{readable_time( transaction['timestamp'])}}<br>
+                    {{transaction['content']}}  </p>
+                {% endfor %}
+            </div>
+
+        </section>
+
+    </body>
+</html>

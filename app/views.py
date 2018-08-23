@@ -32,7 +32,26 @@ def fetch_posts():
         global posts
         posts = sorted(content, key=lambda k: k['timestamp'],
                        reverse=True)
+@app.route('/block/<int:index>')
+def block(index):
+    get_chain_address = "{}/block/{}".format(CONNECTED_NODE_ADDRESS,index)
+    response = requests.get(get_chain_address)
+    block = json.loads(response.content)
+    return render_template('block.html',
+                           block=block,
+                           node_address=CONNECTED_NODE_ADDRESS,
+                           readable_time=timestamp_to_string)
 
+@app.route('/explorer')
+def explorer():
+        get_chain_address = "{}/chain".format(CONNECTED_NODE_ADDRESS)
+        response = requests.get(get_chain_address)
+        if response.status_code == 200:
+            chain = json.loads(response.content)["chain"][::-1]
+            return render_template('explorer.html',
+                                   chain=chain,
+                                   node_address=CONNECTED_NODE_ADDRESS,
+                                   readable_time=timestamp_to_string)
 
 @app.route('/')
 def index():
